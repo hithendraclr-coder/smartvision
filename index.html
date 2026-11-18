@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Vision – Blind Assistance</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3"></script>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="eyebrow">ASSISTIVE TECHNOLOGY PROJECT</div>
+      <h1>Smart Vision</h1>
+      <p class="subtitle">Object detection with spoken announcements</p>
+    </header>
+
+    <section class="notice" role="note">
+      <strong>Prototype safety notice:</strong> This demo can miss or misidentify objects.
+      It is not a navigation or emergency safety device. Test with a sighted helper and
+      continue using established mobility aids.
+    </section>
+
+    <section class="viewer-card">
+      <div class="viewer-heading">
+        <h2>Live camera</h2>
+        <span id="cameraBadge" class="badge">Camera off</span>
+      </div>
+      <div class="viewer" id="viewer">
+        <video id="video" autoplay playsinline muted></video>
+        <canvas id="overlay"></canvas>
+        <div id="placeholder" class="placeholder">
+          <div class="camera-icon">◉</div>
+          <p>Camera preview will appear here</p>
+        </div>
+      </div>
+      <div class="viewer-tools">
+        <button id="fullscreenBtn" disabled>⛶ Full screen</button>
+        <button id="snapshotBtn" disabled>Take snapshot</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Camera controls</h2>
+      <div class="option-grid">
+        <label>Camera
+          <select id="cameraSelect" disabled><option value="">Default camera</option></select>
+        </label>
+        <label>Camera view
+          <select id="mirrorSelect">
+            <option value="off">Normal (not mirrored)</option>
+            <option value="on">Mirror preview</option>
+          </select>
+        </label>
+      </div>
+      <div class="controls">
+        <button id="startBtn" class="primary">Start camera & detection</button>
+        <button id="stopBtn" disabled>Stop</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Voice and detection options</h2>
+      <div class="option-grid">
+        <label>Spoken language
+          <select id="languageSelect">
+            <option value="en-US">English</option>
+            <option value="te-IN">Telugu (if available on device)</option>
+            <option value="hi-IN">Hindi (if available on device)</option>
+          </select>
+        </label>
+        <label>Voice speed <output id="speedValue">0.95×</output>
+          <input id="speedRange" type="range" min="0.7" max="1.3" step="0.05" value="0.95" />
+        </label>
+        <label>Detection sensitivity <output id="confidenceValue">55%</output>
+          <input id="confidenceRange" type="range" min="0.35" max="0.85" step="0.05" value="0.55" />
+        </label>
+        <label>Announcement mode
+          <select id="announceMode">
+            <option value="new">Announce each new object once</option>
+            <option value="repeat">Repeat object after it leaves and returns</option>
+          </select>
+        </label>
+      </div>
+      <div class="controls secondary-controls">
+        <button id="voiceBtn" disabled>Voice: ON</button>
+        <button id="testVoiceBtn">Test voice</button>
+      </div>
+    </section>
+
+    <section class="status-card" aria-live="polite">
+      <div class="status-line"><span class="dot" id="statusDot"></span><span id="status">Ready. Press Start.</span></div>
+      <h2>Currently detected</h2>
+      <p id="objects">No objects detected yet.</p>
+      <p class="last-spoken">Last announcement: <strong id="lastSpoken">None</strong></p>
+    </section>
+
+    <footer>
+      <p>Runs in your browser. Camera permission is required. The first model load needs internet.</p>
+      <p>Supported categories depend on the COCO-SSD model. This is an experimental assistive prototype.</p>
+    </footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
